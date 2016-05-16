@@ -1,16 +1,12 @@
-var lineread = require('n-readlines')
-var liner = new lineread('./dataset/car.data')
+var fs = require('fs')
 var inquirer = require('inquirer')
 
-// module dependencies
 var dclassify = require('dclassify');
 
-// Utilities provided by dclassify
 var Classifier = dclassify.Classifier;
 var DataSet = dclassify.DataSet;
 var Document = dclassify.Document;
 
-var count = 1;
 var data = new DataSet()
 
 var data_unacc = []
@@ -18,30 +14,35 @@ var data_acc = []
 var data_good = []
 var data_vgood = []
 
-var line = ""
-while (line = liner.next()) {
-    var line_array = line.toString().split(",");
+// read dataset file
+var file_contains = fs.readFileSync('./dataset/car.data', 'utf8')
+var file_contains_row = file_contains.split("\n")
+
+// create document
+for (var i = 0 ; i < file_contains_row.length ; i++) {
+    var line_array = file_contains_row[i].toString().split(",");
     var cat = line_array[6];
     line_array.pop();
 
     if (cat === 'unacc') {
-        data_unacc.push(new Document('d_unacc' + count, line_array))
+        data_unacc.push(new Document('d_unacc' + i, line_array))
     } else if (cat === 'acc') {
-        data_acc.push(new Document('d_acc' + count, line_array))
+        data_acc.push(new Document('d_acc' + i, line_array))
     } else if (cat === 'good') {
-        data_good.push(new Document('d_good' + count, line_array))
+        data_good.push(new Document('d_good' + i, line_array))
     } else if (cat === 'vgood') {
-        data_vgood.push(new Document('d_vgood' + count, line_array))
+        data_vgood.push(new Document('d_vgood' + i, line_array))
     }
 
-    count++;
 }
 
+// add documents to dataset using proper category
 data.add('unacc', data_unacc)
 data.add('acc', data_acc)
 data.add('good', data_good)
 data.add('vgood', data_vgood)
 
+// data training
 var classifier = new Classifier({ applyInverse: true })
 classifier.train(data)
 
@@ -111,7 +112,8 @@ inquirer.prompt([
         ]
     },
 ]).then(function (answers) {
-    //console.log(JSON.stringify(answers, null, '  '));
+
+    // classify ...
     var testdoc = new Document('testdoc', [
         answers.buying_attr, 
         answers.maint_attr, 

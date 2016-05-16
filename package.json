@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "dclassify": "^1.1.2",
-    "inquirer": "^1.0.2",
-    "n-readlines": "^0.2.2"
+    "inquirer": "^1.0.2"
   }
 }
