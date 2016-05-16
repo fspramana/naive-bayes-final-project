@@ -1,0 +1,18 @@
+{
+  "name": "naive-bayes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node test_bayes.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dclassify": "^1.1.2",
+    "inquirer": "^1.0.2",
+    "n-readlines": "^0.2.2"
+  }
+}
