@@ -1,11 +1,11 @@
 var fs = require('fs')
 var inquirer = require('inquirer')
 
-var dclassify = require('dclassify');
+var dclassify = require('dclassify')
 
-var Classifier = dclassify.Classifier;
-var DataSet = dclassify.DataSet;
-var Document = dclassify.Document;
+var Classifier = dclassify.Classifier
+var DataSet = dclassify.DataSet
+var Document = dclassify.Document
 
 var data = new DataSet()
 
@@ -20,9 +20,9 @@ var file_contains_row = file_contains.split("\n")
 
 // create document
 for (var i = 0 ; i < file_contains_row.length ; i++) {
-    var line_array = file_contains_row[i].toString().split(",");
-    var cat = line_array[6];
-    line_array.pop();
+    var line_array = file_contains_row[i].toString().split(",")
+    var cat = line_array[6]
+    line_array.pop()
 
     if (cat === 'unacc') {
         data_unacc.push(new Document('d_unacc' + i, line_array))
@@ -125,6 +125,6 @@ inquirer.prompt([
     
     var result = classifier.classify(testdoc)
     console.log(JSON.stringify(result, null, '  '))
-});
+})
 
 
