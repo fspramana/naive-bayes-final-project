@@ -1,6 +1,4 @@
 var fs = require('fs')
-var inquirer = require('inquirer')
-
 var dclassify = require('dclassify')
 
 var Classifier = dclassify.Classifier
@@ -52,93 +50,14 @@ var testing_data_rows = testing_data_contains.split("\n")
 // do data testing
 var classification_row = ""
 for (var j = 0 ; j < testing_data_rows.length ; j++) {
-    var testing_data_row_array = testing_data_rows[j].split(",")
-    var documentTest = new Document('test'+j, testing_data_row_array)
+    if (testing_data_rows[j] !== '') {
+        var testing_data_row_array = testing_data_rows[j].split(",")
+        var documentTest = new Document('test'+j, testing_data_row_array)
 
-    var result = classifier.classify(documentTest)
-    classification_row += testing_data_rows[j] + "," + result.category + "," + result.probability + "\n"
+        var result = classifier.classify(documentTest)
+        classification_row += testing_data_rows[j] + "," + result.category + "," + result.probability + "\n"
+    }
 }
 
 // write to file
 fs.writeFileSync('./dataset/classification.result', classification_row, 'utf8', 'w+')
-
-// request input..
-// inquirer.prompt([
-//     {
-//         type: 'list',
-//         name: 'buying_attr',
-//         message: 'Select buying attribute',
-//         choices: [
-//             'vhigh',
-//             'high',
-//             'med',
-//             'low'
-//         ]
-//     },
-//     {
-//         type: 'list',
-//         name: 'maint_attr',
-//         message: 'Select maint attribute',
-//         choices: [
-//             'vhigh',
-//             'high',
-//             'med',
-//             'low'
-//         ]
-//     },
-//     {
-//         type: 'list',
-//         name: 'door_attr',
-//         message: 'Select door attribute',
-//         choices: [
-//             '2',
-//             '3',
-//             '4',
-//             '5more'
-//         ]
-//     },
-//     {
-//         type: 'list',
-//         name: 'person_attr',
-//         message: 'Select person attribute',
-//         choices: [
-//             '2',
-//             '4',
-//             'more'
-//         ]
-//     },
-//     {
-//         type: 'list',
-//         name: 'lug_bot_attr',
-//         message: 'Select lug_bot attribute',
-//         choices: [
-//             'small',
-//             'med',
-//             'big'
-//         ]
-//     },
-//     {
-//         type: 'list',
-//         name: 'safety_attr',
-//         message: 'Select safety attribute',
-//         choices: [
-//             'low',
-//             'med',
-//             'high'
-//         ]
-//     },
-// ]).then(function (answers) {
-//
-//     // classify ...
-//     var testdoc = new Document('testdoc', [
-//         answers.buying_attr,
-//         answers.maint_attr,
-//         answers.door_attr,
-//         answers.person_attr,
-//         answers.lug_bot_attr,
-//         answers.safety_attr
-//     ])
-//
-//     var result = classifier.classify(testdoc)
-//     console.log(JSON.stringify(result, null, '  '))
-// })
