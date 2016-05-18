@@ -8,63 +8,65 @@ var Document = dclassify.Document
 var data = new DataSet()
 var classifier = new Classifier()
 
-var data_unacc = []
-var data_acc = []
-var data_good = []
-var data_vgood = []
+var dataUnacc = []
+var dataAcc = []
+var dataGood = []
+var dataVgood = []
 
-var train_dataset = function (dataset_path) {
+var trainDataset = function (datasetPath) {
     // read dataset file
-    var training_data_contains = fs.readFileSync(dataset_path, 'utf8')
-    var training_data_rows = training_data_contains.split("\n")
+    var trainingDataContains = fs.readFileSync(datasetPath, 'utf8')
+    var trainingDataRows = trainingDataContains.split("\n")
 
     // create document
-    for (var i = 0 ; i < training_data_rows.length ; i++) {
-        var line_array = training_data_rows[i].toString().split(",")
-        var cat = line_array[6]
-        line_array.pop()
+    for (var i = 0 ; i < trainingDataRows.length ; i++) {
+        var lineArray = trainingDataRows[i].toString().split(",")
+        var cat = lineArray[6]
+        lineArray.pop()
 
         if (cat === 'unacc') {
-            data_unacc.push(new Document('d_unacc' + i, line_array))
+            dataUnacc.push(new Document('d_unacc' + i, lineArray))
         } else if (cat === 'acc') {
-            data_acc.push(new Document('d_acc' + i, line_array))
+            dataAcc.push(new Document('d_acc' + i, lineArray))
         } else if (cat === 'good') {
-            data_good.push(new Document('d_good' + i, line_array))
+            dataGood.push(new Document('d_good' + i, lineArray))
         } else if (cat === 'vgood') {
-            data_vgood.push(new Document('d_vgood' + i, line_array))
+            dataVgood.push(new Document('d_vgood' + i, lineArray))
         }
 
     }
 
     // add documents to dataset using proper category
-    data.add('unacc', data_unacc)
-    data.add('acc', data_acc)
-    data.add('good', data_good)
-    data.add('vgood', data_vgood)
+    data.add('unacc', dataUnacc)
+    data.add('acc', dataAcc)
+    data.add('good', dataGood)
+    data.add('vgood', dataVgood)
 
     // data training
     classifier.train(data)
+    console.log('Data trained successfuly')
 }
 
-var classify_dataset = function (test_dataset_path) {
-    var testing_data_contains = fs.readFileSync(test_dataset_path, 'utf8')
-    var testing_data_rows = testing_data_contains.split("\n")
+var classifyDataset = function (testDatasetPath) {
+    var testingDataContains = fs.readFileSync(testDatasetPath, 'utf8')
+    var testingDataRows = testingDataContains.split("\n")
 
     // do data testing
-    var classification_row = ""
-    for (var j = 0 ; j < testing_data_rows.length ; j++) {
-        if (testing_data_rows[j] !== '') {
-            var testing_data_row_array = testing_data_rows[j].split(",")
+    var classificationRow = ""
+    for (var j = 0 ; j < testingDataRows.length ; j++) {
+        if (testingDataRows[j] !== '') {
+            var testing_data_row_array = testingDataRows[j].split(",")
             var documentTest = new Document('test'+j, testing_data_row_array)
 
             var result = classifier.classify(documentTest)
-            classification_row += testing_data_rows[j] + "," + result.category + "," + result.probability + "\n"
+            classificationRow += testingDataRows[j] + "," + result.category + "," + result.probability + "\n"
         }
     }
 
     // write to file
-    fs.writeFileSync('./dataset/classification.result', classification_row, 'utf8', 'w+')
+    fs.writeFileSync('./dataset/classification.result', classificationRow, 'utf8', 'w+')
+    console.log('Data classified successfully. Result generated at dataset/classification.result')
 }
 
-module.exports.train_dataset = train_dataset
-module.exports.classify_dataset = classify_dataset
+module.exports.trainDataset = trainDataset
+module.exports.classifyDataset = classifyDataset
